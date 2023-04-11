@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.slick-slider {
+  overflow: hidden;
+}
+
+@media (min-width: 684px) and (max-width: 735px) {
+  .slick-list {
+    margin: 0 -30px;
+  }
+}
+@media (min-width: 736px) and (max-width: 767px) {
+  .slick-list {
+    margin: 0 -42px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .slick-list {
+    margin: 0 -38px;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .slick-list {
+    margin: 0 -33px;
+  }
+}
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .slick-list {
+    margin: 0 -20px;
+  }
+}
+@media (min-width: 1440px) {
+  .slick-list {
+    margin: 0 -40px;
+  }
+}
+.active {
+  color: crimson;
+}
+
+/* For Removing Scrollbar in Shop page Left Side MenuBar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Removing the default cross icon in search bar */
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
