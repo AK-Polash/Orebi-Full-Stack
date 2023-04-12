@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
-const dotenv = require("dotenv");
+const dbConnection = require("./config/dbConfig.js");
+const _ = require("./routes");
 
-dotenv.config();
+// Database Connection:
+dbConnection();
+
+// Middleware:
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send({ message: "Hello World..!" });
-});
-
+app.use(_);
 app.listen(8000);
