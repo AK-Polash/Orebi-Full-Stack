@@ -1,11 +1,11 @@
 const namePattern = /^[a-zA-Z][a-zA-Z0-9\s]*$/;
 
-const nameValidation = (res, name) => {
+const nameValidation = (res, name, fieldName) => {
   if (!name) {
-    res.send({ error: "name required" });
+    res.send({ error: `${fieldName} required`, errorField: fieldName });
     return true;
   } else if (!namePattern.test(name)) {
-    res.send({ error: "valid name required" });
+    res.send({ error: `valid ${fieldName} required`, errorField: fieldName });
     return true;
   } else {
     return false;

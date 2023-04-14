@@ -5,6 +5,7 @@ import InputBox from "../components/layout/InputBox";
 import Flex from "../components/layout/Flex";
 import Button from "../components/layout/Button";
 import Map from "../components/layout/Map";
+import FormHeading from "../components/layout/FormHeading";
 
 const Contacts = () => {
   const [formData, setFormData] = useState({
@@ -35,9 +36,7 @@ const Contacts = () => {
         <Bredcrumb />
 
         <div className="w-full">
-          <h2 className="mb-4 font-dm text-xl font-bold text-primary lg:text-2xl xl:mb-10 xl:text-4xl">
-            Fill up a Form
-          </h2>
+          <FormHeading heading="Fill up a Form" />
           <form method="post" onSubmit={handleSendFormData}>
             <Flex className="flex w-full flex-col gap-y-5 md:w-2/4 xl:w-[780px]">
               <InputBox

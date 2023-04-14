@@ -20,9 +20,9 @@ const registrationController = (req, res) => {
     password,
   } = req.body;
 
-  if (nameValidation(res, firstName)) {
+  if (nameValidation(res, firstName, "firstName")) {
     return;
-  } else if (nameValidation(res, lastName)) {
+  } else if (nameValidation(res, lastName, "lastName")) {
     return;
   } else if (emailValidation(res, email)) {
     return;
@@ -56,7 +56,7 @@ const registrationController = (req, res) => {
           .save()
           .then(() => res.send({ message: "registration successful" }));
       } else {
-        return res.send({ message: "user already exist" });
+        return res.send({ error: "user already exist" });
       }
     } catch (error) {
       return res.send({ error: "server error" });

@@ -14,7 +14,7 @@ const Bredcrumb = () => {
       <p className="flex items-center gap-x-1 font-dm text-xs font-normal text-secondary">
         <Link to="/"> Home </Link>
         <FaAngleRight className="!text-[10px] font-normal" />
-        {path}
+        {path.charAt(0).toUpperCase() + path.slice(1)}
       </p>
     </div>
   );
