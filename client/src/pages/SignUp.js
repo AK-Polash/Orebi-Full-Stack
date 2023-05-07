@@ -88,11 +88,11 @@ const SignUp = () => {
       <Container>
         <Bredcrumb />
 
-        <div className="mb-14 w-1/2 font-dm text-base font-normal text-secondary">
+        <p className="mb-14 w-full font-dm text-base font-normal text-secondary lg:w-1/2">
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry. Lorem Ipsum has been the industry's standard dummy text ever
           since the.
-        </div>
+        </p>
 
         <form method="post" onSubmit={handleSignUp}>
           <div className="border-y border-y-smoke py-20">

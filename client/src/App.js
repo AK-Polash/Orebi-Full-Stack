@@ -10,6 +10,8 @@ import Shop from "./pages/Shop";
 import About from "./pages/About";
 import Contacts from "./pages/Contacts";
 import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
 let router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +21,8 @@ let router = createBrowserRouter(
       <Route path="/about" element={<About />} />
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="*" element={<NotFound />} />
     </Route>
   )
 );
