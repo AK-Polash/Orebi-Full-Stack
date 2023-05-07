@@ -32,6 +32,11 @@ const registrationController = (req, res) => {
     return;
   } else if (passwordValidation(res, password)) {
     return;
+  } else if (password.length < 8) {
+    return res.send({
+      error: "at lest 8 char require",
+      errorField: "password",
+    });
   } else if (password !== repeatPassword) {
     return res.send({
       error: "password does not match",
