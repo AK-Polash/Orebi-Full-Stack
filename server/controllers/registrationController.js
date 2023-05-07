@@ -18,6 +18,8 @@ const registrationController = (req, res) => {
     country,
     state,
     password,
+    repeatPassword,
+    policy,
   } = req.body;
 
   if (nameValidation(res, firstName, "firstName")) {
@@ -30,6 +32,16 @@ const registrationController = (req, res) => {
     return;
   } else if (passwordValidation(res, password)) {
     return;
+  } else if (password !== repeatPassword) {
+    return res.send({
+      error: "password does not match",
+      errorField: "repeatPassword",
+    });
+  } else if (policy === false) {
+    return res.send({
+      error: "check this to signup",
+      errorField: "policy",
+    });
   }
 
   bcrypt.hash(password, 10, async (err, hash) => {
@@ -56,7 +68,7 @@ const registrationController = (req, res) => {
           .save()
           .then(() => res.send({ message: "registration successful" }));
       } else {
-        return res.send({ error: "user already exist" });
+        return res.send({ error: "user already exist", errorField: "email" });
       }
     } catch (error) {
       return res.send({ error: "server error" });

@@ -19,6 +19,7 @@ const InputBox = (props) => {
           name={props.name}
           onChange={props.onChange}
           value={props.value}
+          ref={props.reference}
         />
       ) : (
         <props.as
@@ -28,6 +29,7 @@ const InputBox = (props) => {
           name={props.name}
           onChange={props.onChange}
           value={props.value}
+          ref={props.reference}
         />
       )}
     </div>

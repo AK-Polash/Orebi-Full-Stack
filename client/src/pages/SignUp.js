@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import Container from "../components/layout/Container";
 import Bredcrumb from "../components/layout/Bredcrumb";
@@ -27,6 +27,16 @@ const SignUp = () => {
 
   const [errorMsg, setErrorMsg] = useState({});
 
+  const inputRef = useRef({
+    firstName: null,
+    lastName: null,
+    email: null,
+    telephone: null,
+    password: null,
+    repeatPassword: null,
+    policy: null,
+  });
+
   const handleSignUp = async (e) => {
     e.preventDefault();
 
@@ -42,7 +52,7 @@ const SignUp = () => {
 
       if (error) {
         setErrorMsg({ [errorField]: error });
-        console.log(error);
+        inputRef.current[errorField].focus();
       } else if (message) {
         setFormData({
           firstName: "",
@@ -57,6 +67,8 @@ const SignUp = () => {
           state: "",
           password: "",
           repeatPassword: "",
+          policy: false,
+          subscribe: "no",
         });
         alert(message);
       }
@@ -97,6 +109,7 @@ const SignUp = () => {
                   onChange={handleChangeFormData}
                   name="firstName"
                   value={formData.firstName}
+                  reference={(el) => (inputRef.current.firstName = el)}
                 />
                 {errorMsg.firstName && (
                   <div className="absolute -bottom-6 left-0 font-dm text-base font-normal text-red-500">
@@ -115,6 +128,7 @@ const SignUp = () => {
                   onChange={handleChangeFormData}
                   name="lastName"
                   value={formData.lastName}
+                  reference={(el) => (inputRef.current.lastName = el)}
                 />
                 {errorMsg.lastName && (
                   <div className="absolute -bottom-6 left-0 font-dm text-base font-normal text-red-500">
@@ -133,6 +147,7 @@ const SignUp = () => {
                   onChange={handleChangeFormData}
                   name="email"
                   value={formData.email}
+                  reference={(el) => (inputRef.current.email = el)}
                 />
                 {errorMsg.email && (
                   <div className="absolute -bottom-6 left-0 font-dm text-base font-normal text-red-500">
@@ -151,6 +166,7 @@ const SignUp = () => {
                   onChange={handleChangeFormData}
                   name="telephone"
                   value={formData.telephone}
+                  reference={(el) => (inputRef.current.telephone = el)}
                 />
                 {errorMsg.telephone && (
                   <div className="absolute -bottom-6 left-0 font-dm text-base font-normal text-red-500">
@@ -259,6 +275,7 @@ const SignUp = () => {
                   onChange={handleChangeFormData}
                   name="password"
                   value={formData.password}
+                  reference={(el) => (inputRef.current.password = el)}
                 />
                 {errorMsg.password && (
                   <div className="absolute -bottom-6 left-0 font-dm text-base font-normal text-red-500">
@@ -277,6 +294,7 @@ const SignUp = () => {
                   onChange={handleChangeFormData}
                   name="repeatPassword"
                   value={formData.repeatPassword}
+                  reference={(el) => (inputRef.current.repeatPassword = el)}
                 />
                 {errorMsg.repeatPassword && (
                   <div className="absolute -bottom-6 left-0 font-dm text-base font-normal text-red-500">
@@ -289,16 +307,27 @@ const SignUp = () => {
 
           <div className="mt-16 flex items-center gap-x-3.5 font-dm text-sm font-normal text-secondary">
             <input
+              className="cursor-pointer"
               type="checkbox"
               id="policy"
               name="policy"
               checked={formData.policy}
-              onChange={() =>
-                setFormData({ ...formData, policy: !formData.policy })
-              }
+              onChange={() => {
+                setFormData({ ...formData, policy: !formData.policy });
+                setErrorMsg({});
+              }}
               value={formData.policy}
+              ref={(el) => (inputRef.current.policy = el)}
             />
-            <label htmlFor="policy">
+
+            <label
+              htmlFor="policy"
+              className={
+                errorMsg.policy
+                  ? "cursor-pointer text-red-500"
+                  : "cursor-pointer"
+              }
+            >
               I have read and agree to the Privacy Policy
             </label>
           </div>
@@ -318,7 +347,9 @@ const SignUp = () => {
                   name="subscribe"
                   value="yes"
                 />
-                <label htmlFor="yes">Yes</label>
+                <label htmlFor="yes" className="cursor-pointer">
+                  Yes
+                </label>
               </div>
 
               <div className="flex items-center gap-x-3.5">
@@ -332,7 +363,9 @@ const SignUp = () => {
                   name="subscribe"
                   value="no"
                 />
-                <label htmlFor="no">No</label>
+                <label htmlFor="no" className="cursor-pointer">
+                  No
+                </label>
               </div>
             </div>
           </div>
