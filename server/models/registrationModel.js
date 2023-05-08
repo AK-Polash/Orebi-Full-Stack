@@ -41,6 +41,7 @@ const registrationSchema = new Schema({
     type: String,
     required: true,
   },
+  forgotPasswordOTP: { type: String },
   verified: {
     type: Boolean,
     default: false,
