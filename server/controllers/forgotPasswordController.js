@@ -15,8 +15,10 @@ const forgotPasswordController = async (req, res) => {
     const { uInt32 } = aleaRNGFactory(Date.now());
     const randomOtp = uInt32().toString().substring(0, 4);
 
-    existingUser[0].forgotPasswordOTP = randomOtp;
-    await existingUser[0].save();
+    await User.findOneAndUpdate(
+      { email },
+      { $set: { forgotPasswordOTP: randomOtp } }
+    );
 
     return res.send({ message: "password reset email sent" });
   } catch (err) {
