@@ -36,8 +36,8 @@
     margin: 0 -40px;
   }
 }
-.active {
-  color: crimson;
+nav ul li .active {
+  color: #262626;
 }
 
 /* For Removing Scrollbar in Shop page Left Side MenuBar */
