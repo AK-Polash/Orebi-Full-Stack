@@ -26,7 +26,7 @@ const registrationController = (req, res) => {
     return;
   } else if (nameValidation(res, lastName, "lastName")) {
     return;
-  } else if (emailValidation(res, email)) {
+  } else if (emailValidation(res, email, "email")) {
     return;
   } else if (telephoneValidation(res, telephone)) {
     return;

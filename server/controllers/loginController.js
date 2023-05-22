@@ -6,7 +6,7 @@ const passwordValidation = require("../utils/passwordValidation");
 const loginController = async (req, res) => {
   const { email, password } = req.body;
 
-  if (emailValidation(res, email)) {
+  if (emailValidation(res, email, "email")) {
     return;
   } else if (passwordValidation(res, password)) {
     return;
