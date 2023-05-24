@@ -6,6 +6,9 @@ import InputBox from "../components/layout/InputBox";
 import FormHeading from "../components/layout/FormHeading";
 import Flex from "../components/layout/Flex";
 import Button from "../components/layout/Button";
+import { ColorRing } from "react-loader-spinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -26,6 +29,7 @@ const SignUp = () => {
   });
 
   const [errorMsg, setErrorMsg] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const inputRef = useRef({
     firstName: null,
@@ -41,6 +45,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const response = await axios.post(
         "http://localhost:8000/api/v1/auth/registration",
         {
@@ -53,6 +58,7 @@ const SignUp = () => {
       if (error) {
         setErrorMsg({ [errorField]: error });
         inputRef.current[errorField].focus();
+        setLoading(false);
       } else if (message) {
         setFormData({
           firstName: "",
@@ -70,7 +76,17 @@ const SignUp = () => {
           policy: false,
           subscribe: "no",
         });
-        alert(message);
+        setLoading(false);
+        toast.success(message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       }
     } catch (error) {
       console.log(error);
@@ -85,6 +101,19 @@ const SignUp = () => {
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+
       <Container>
         <Bredcrumb />
 
@@ -370,7 +399,16 @@ const SignUp = () => {
             </div>
           </div>
 
-          <Button btnText="Sign Up" type="submit" />
+          {!loading && <Button btnText="Sign Up" type="submit" />}
+          <ColorRing
+            visible={loading}
+            height="50"
+            width="50"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{ marginLeft: "75px" }}
+            wrapperClass="blocks-wrapper"
+            colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+          />
         </form>
       </Container>
     </div>

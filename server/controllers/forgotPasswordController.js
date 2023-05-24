@@ -1,5 +1,6 @@
 const User = require("../models/registrationModel");
 const emailValidation = require("../utils/emailValidation");
+const emailSend = require("../utils/emailSend");
 const aleaRNGFactory = require("number-generator/lib/aleaRNGFactory");
 
 const forgotPasswordController = async (req, res) => {
@@ -9,7 +10,10 @@ const forgotPasswordController = async (req, res) => {
 
     const existingUser = await User.find({ email: forgotPassword });
     if (!existingUser.length > 0) {
-      return res.send({ error: "user not found", errorField: "forgotPassword" });
+      return res.send({
+        error: "user not found",
+        errorField: "forgotPassword",
+      });
     }
 
     const { uInt32 } = aleaRNGFactory(Date.now());
@@ -20,9 +24,12 @@ const forgotPasswordController = async (req, res) => {
       { $set: { forgotPasswordOTP: randomOtp } }
     );
 
-    return res.send({ message: "password reset email sent" });
-  } catch (err) {
-    return res.send({ error: "internal server error", errorField: "forgotPassword" });
+    return emailSend(res, randomOtp, forgotPassword);
+  } catch (error) {
+    return res.send({
+      error: "internal server error",
+      errorField: "forgotPassword",
+    });
   }
 };
 

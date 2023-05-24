@@ -30,7 +30,7 @@ const registrationController = (req, res) => {
     return;
   } else if (telephoneValidation(res, telephone)) {
     return;
-  } else if (passwordValidation(res, password)) {
+  } else if (passwordValidation(res, password, "password")) {
     return;
   } else if (password.length < 8) {
     return res.send({

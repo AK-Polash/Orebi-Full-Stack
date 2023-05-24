@@ -12,6 +12,8 @@ import Contacts from "./pages/Contacts";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import MatchOtp from "./pages/MatchOtp";
+import ResetPassword from "./pages/ResetPassword";
 
 let router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,6 +24,8 @@ let router = createBrowserRouter(
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/matchOtp" element={<MatchOtp />} />
+      <Route path="/resetPassword" element={<ResetPassword />} />
       <Route path="*" element={<NotFound />} />
     </Route>
   )

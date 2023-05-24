@@ -8,7 +8,7 @@ const loginController = async (req, res) => {
 
   if (emailValidation(res, email, "email")) {
     return;
-  } else if (passwordValidation(res, password)) {
+  } else if (passwordValidation(res, password, "password")) {
     return;
   }
 

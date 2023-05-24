@@ -9,6 +9,9 @@ import Flex from "../components/layout/Flex";
 import FormHeading from "../components/layout/FormHeading";
 import Modal from "../components/layout/Modal";
 import { RxCross2 } from "react-icons/rx";
+import { ColorRing } from "react-loader-spinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const inputRef = useRef({
@@ -23,6 +26,8 @@ const Login = () => {
   });
 
   const [errorMsg, setErrorMsg] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [forgotPassLoading, setForgotPassLoading] = useState(false);
 
   const handleChangeFormData = (e) => {
     const { name, value } = e.target;
@@ -34,6 +39,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const userData = await axios.post(
         "http://localhost:8000/api/v1/auth/login",
         {
@@ -46,9 +52,20 @@ const Login = () => {
       if (error) {
         setErrorMsg({ [errorField]: error });
         inputRef.current[errorField].focus();
+        setLoading(false);
       } else if (message) {
+        setLoading(false);
         setFormData({ email: "", password: "" });
-        alert(message);
+        toast.success(message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       }
     } catch (error) {
       console.log(error);
@@ -68,6 +85,7 @@ const Login = () => {
 
   const handleForgotPassword = async () => {
     try {
+      setForgotPassLoading(true);
       const forgotPasswordData = await axios.post(
         "http://localhost:8000/api/v1/auth/forgotPassword",
         {
@@ -80,10 +98,22 @@ const Login = () => {
       if (error) {
         setErrorMsg({ [errorField]: error });
         inputRef.current[errorField].focus();
+        setForgotPassLoading(false);
       } else if (message) {
         setForgotPassword("");
         setModalOpen(false);
-        alert(message);
+        localStorage.setItem("forgotPassword", JSON.stringify(forgotPassword));
+        setForgotPassLoading(false);
+        toast.success(message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       }
     } catch (error) {
       console.log(error);
@@ -92,6 +122,18 @@ const Login = () => {
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Container>
         <Bredcrumb />
         <p className="mb-14 w-full font-dm text-base font-normal text-secondary lg:w-1/2">
@@ -144,7 +186,16 @@ const Login = () => {
                 )}
               </div>
             </Flex>
-            <Button btnText="Log In" type="submit" />
+            {!loading && <Button btnText="Log In" type="submit" />}
+            <ColorRing
+              visible={loading}
+              height="50"
+              width="50"
+              ariaLabel="blocks-loading"
+              wrapperStyle={{ marginLeft: "75px" }}
+              wrapperClass="blocks-wrapper"
+              colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+            />
 
             <div className="mt-3 font-dm text-base font-normal">
               <span className="text-primary">Forgot password?</span>
@@ -180,12 +231,24 @@ const Login = () => {
               {errorMsg.forgotPassword}
             </div>
           )}
-          <button
-            onClick={handleForgotPassword}
-            className="mt-10 h-[50px] w-[100%] border-2 border-transparent bg-primary font-dm text-sm font-bold text-white transition-all duration-100 ease-linear hover:border-2 hover:border-primary hover:bg-pure hover:text-primary"
-          >
-            Get OTP Code
-          </button>
+          {!forgotPassLoading && (
+            <button
+              onClick={handleForgotPassword}
+              className="mt-10 h-[50px] w-[100%] border-2 border-transparent bg-primary font-dm text-sm font-bold text-white transition-all duration-100 ease-linear hover:border-2 hover:border-primary hover:bg-pure hover:text-primary"
+            >
+              Get OTP Code
+            </button>
+          )}
+          <ColorRing
+            visible={forgotPassLoading}
+            height="50"
+            width="50"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{ marginLeft: "163px", marginTop: "40px" }}
+            wrapperClass="blocks-wrapper"
+            colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+          />
+
           <button
             onClick={closeModal}
             className="absolute top-2 right-2 text-red-500"

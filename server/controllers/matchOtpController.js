@@ -1,20 +1,24 @@
 const User = require("../models/registrationModel");
 
 const matchOtpController = async (req, res) => {
+  const { otp, forgotPassword } = req.body;
+
   try {
-    const { otp, email } = req.body;
-    const existingUser = await User.find({ email });
+    const existingUser = await User.find({ email: forgotPassword });
 
     if (!existingUser.length > 0) {
-      return res.send({ error: "user not found", errorField: "otp" });
+      return res.send({ error: "untracked email", errorField: "otp" });
     }
 
     if (existingUser[0].forgotPasswordOTP !== otp) {
-      return res.send({ error: "otp does not match", errorField: "otp" });
+      return res.send({ error: "OTP does not match", errorField: "otp" });
     }
 
-    await User.updateOne({ email }, { $unset: { forgotPasswordOTP: "" } });
-    return res.send({ message: "otp matched" });
+    await User.updateOne(
+      { email: forgotPassword },
+      { $unset: { forgotPasswordOTP: "" } }
+    );
+    return res.send({ message: "OTP matched successfully" });
   } catch (err) {
     return res.send({ error: "internal server error", errorField: "otp" });
   }
