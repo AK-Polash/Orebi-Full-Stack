@@ -24,7 +24,7 @@ const forgotPasswordController = async (req, res) => {
       { $set: { forgotPasswordOTP: randomOtp } }
     );
 
-    return emailSend(res, randomOtp, forgotPassword);
+    return emailSend(res, randomOtp, forgotPassword, "forgotPassword");
   } catch (error) {
     return res.send({
       error: "internal server error",
