@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Container from "../components/layout/Container";
 import Bredcrumb from "../components/layout/Bredcrumb";
@@ -11,6 +12,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const [next, setNext] = useState(false);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -59,6 +63,7 @@ const SignUp = () => {
         setErrorMsg({ [errorField]: error });
         inputRef.current[errorField].focus();
         setLoading(false);
+        setNext(false);
       } else if (message) {
         setFormData({
           firstName: "",
@@ -87,6 +92,7 @@ const SignUp = () => {
           progress: undefined,
           theme: "dark",
         });
+        setNext(true);
       }
     } catch (error) {
       console.log(error);
@@ -98,6 +104,14 @@ const SignUp = () => {
     setFormData({ ...formData, [name]: value });
     setErrorMsg({});
   };
+
+  useEffect(() => {
+    if (next) {
+      setTimeout(() => {
+        navigate("/login");
+      }, 1700);
+    }
+  }, [next, navigate]);
 
   return (
     <div>

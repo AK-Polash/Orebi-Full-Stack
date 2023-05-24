@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Container from "../components/layout/Container";
 import Bredcrumb from "../components/layout/Bredcrumb";
@@ -14,6 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
+  const navigate = useNavigate();
   const inputRef = useRef({
     email: null,
     password: null,
@@ -72,6 +73,7 @@ const Login = () => {
     }
   };
 
+  const [next, setNext] = useState(false);
   const [forgotPassword, setForgotPassword] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -99,6 +101,7 @@ const Login = () => {
         setErrorMsg({ [errorField]: error });
         inputRef.current[errorField].focus();
         setForgotPassLoading(false);
+        setNext(false);
       } else if (message) {
         setForgotPassword("");
         setModalOpen(false);
@@ -114,11 +117,20 @@ const Login = () => {
           progress: undefined,
           theme: "dark",
         });
+        setNext(true);
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (next) {
+      setTimeout(() => {
+        navigate("/matchOtp");
+      }, 1700);
+    }
+  }, [next, navigate]);
 
   return (
     <div>

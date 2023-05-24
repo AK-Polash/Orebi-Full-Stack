@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Container from "../components/layout/Container";
 import InputBox from "../components/layout/InputBox";
 import Button from "../components/layout/Button";
@@ -8,9 +9,11 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 const ResetPassword = () => {
+  const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState({});
   const [loading, setLoading] = useState(false);
+  const [next, setNext] = useState(false);
 
   const handleResetPassword = async () => {
     setLoading(true);
@@ -29,6 +32,7 @@ const ResetPassword = () => {
     if (error) {
       setErrorMsg({ [errorField]: error });
       setLoading(false);
+      setNext(false);
     } else if (message) {
       setNewPassword("");
       setLoading(false);
@@ -43,9 +47,17 @@ const ResetPassword = () => {
         progress: undefined,
         theme: "dark",
       });
+      setNext(true);
     }
   };
 
+  useEffect(() => {
+    if (next) {
+      setTimeout(() => {
+        navigate("/login");
+      }, 1700);
+    }
+  }, [next, navigate]);
   return (
     <div>
       <ToastContainer

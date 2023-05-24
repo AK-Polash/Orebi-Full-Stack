@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "../components/layout/Button";
 import InputBox from "../components/layout/InputBox";
@@ -8,9 +9,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MatchOtp = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState({});
   const [otp, setOtp] = useState("");
+  const [next, setNext] = useState(false);
   const localEmail = JSON.parse(localStorage.getItem("forgotPassword"));
 
   const handleConfirmOtp = async () => {
@@ -29,6 +32,7 @@ const MatchOtp = () => {
     if (error) {
       setErrorMsg({ [errorField]: error });
       setLoading(false);
+      setNext(false);
     } else if (message) {
       setLoading(false);
       setErrorMsg({});
@@ -43,8 +47,17 @@ const MatchOtp = () => {
         progress: undefined,
         theme: "dark",
       });
+      setNext(true);
     }
   };
+
+  useEffect(() => {
+    if (next) {
+      setTimeout(() => {
+        navigate("/resetPassword");
+      }, 1700);
+    }
+  }, [next, navigate]);
 
   return (
     <div>
