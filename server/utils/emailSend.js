@@ -19,7 +19,7 @@ const emailSend = async (res, otp, email, fieldName) => {
 
     if (!info.accepted.length > 0) {
       return res.send({
-        error: "occured a problem while sending the email",
+        error: "occured an error while sending the email",
         errorField: fieldName,
       });
     }
