@@ -12,7 +12,7 @@ const forgotPasswordController = async (req, res) => {
     const existingUser = await User.find({ email: forgotPassword });
     if (!existingUser.length > 0) {
       return res.send({
-        error: "user not found",
+        error: "User not found",
         errorField: "forgotPassword",
       });
     }
@@ -28,10 +28,10 @@ const forgotPasswordController = async (req, res) => {
 
     emailSend(forgotPassword, "Forgot Password?", otpTemplate(randomOtp));
 
-    return res.send({ message: "an OTP code sent to your email address" });
+    return res.send({ message: "An OTP code sent to your email address" });
   } catch (error) {
     return res.send({
-      error: "internal server error",
+      error: "Internal server error",
       errorField: "forgotPassword",
     });
   }

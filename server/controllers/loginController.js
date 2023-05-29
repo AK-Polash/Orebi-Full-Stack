@@ -15,15 +15,15 @@ const loginController = async (req, res) => {
   const existUser = await User.find({ email });
 
   if (!existUser.length > 0) {
-    return res.send({ error: "user not found", errorField: "email" });
+    return res.send({ error: "User not found", errorField: "email" });
   }
 
   const match = await bcrypt.compare(password, existUser[0].password);
 
   if (match) {
-    return res.send({ message: "login success" });
+    return res.send({ message: "Login success" });
   } else {
-    return res.send({ error: "crediential error", errorField: "password" });
+    return res.send({ error: "Crediential error", errorField: "password" });
   }
 };
 

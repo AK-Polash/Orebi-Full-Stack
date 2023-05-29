@@ -7,7 +7,7 @@ const matchOtpController = async (req, res) => {
     const existingUser = await User.find({ email: forgotPassword });
 
     if (!existingUser.length > 0) {
-      return res.send({ error: "untracked email", errorField: "otp" });
+      return res.send({ error: "Untracked email", errorField: "otp" });
     }
 
     if (existingUser[0].forgotPasswordOTP !== otp) {
@@ -20,7 +20,7 @@ const matchOtpController = async (req, res) => {
     );
     return res.send({ message: "OTP matched successfully" });
   } catch (err) {
-    return res.send({ error: "internal server error", errorField: "otp" });
+    return res.send({ error: "Internal server error", errorField: "otp" });
   }
 };
 

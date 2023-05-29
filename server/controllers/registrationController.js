@@ -37,23 +37,23 @@ const registrationController = (req, res) => {
     return;
   } else if (password.length < 8) {
     return res.send({
-      error: "at lest 8 char require",
+      error: "At lest 8 char require",
       errorField: "password",
     });
   } else if (password !== repeatPassword) {
     return res.send({
-      error: "password does not match",
+      error: "Password does not match",
       errorField: "repeatPassword",
     });
   } else if (policy === false) {
     return res.send({
-      error: "check this to signup",
+      error: "Check this to signup",
       errorField: "policy",
     });
   }
 
   bcrypt.hash(password, 10, async (err, hash) => {
-    if (err) return res.send({ error: "internal error" });
+    if (err) return res.send({ error: "Internal error" });
 
     try {
       const existUser = await User.find({ email: email });
@@ -73,7 +73,6 @@ const registrationController = (req, res) => {
         });
 
         const token = tokenCreator({ email: user.email }, "secret", "1d");
-        console.log(token);
 
         emailSend(
           user.email,
@@ -83,14 +82,14 @@ const registrationController = (req, res) => {
 
         await user.save().then(() =>
           res.send({
-            message: "registration successful verification email sent",
+            message: "Registration successful verification email sent",
           })
         );
       } else {
-        return res.send({ error: "user already exist", errorField: "email" });
+        return res.send({ error: "User already exist", errorField: "email" });
       }
     } catch (error) {
-      return res.send({ error: "server error" });
+      return res.send({ error: "Internal server error" });
     }
   });
 };

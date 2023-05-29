@@ -9,12 +9,12 @@ const resetPasswordController = async (req, res) => {
   try {
     if (newPassword.length < 8) {
       return res.send({
-        error: "at lest 8 char require",
+        error: "At lest 8 char require",
         errorField: "resetPassword",
       });
     } else if (!email) {
       return res.send({
-        error: "untracked email",
+        error: "Untracked email",
         errorField: "resetPassword",
       });
     }
@@ -22,9 +22,12 @@ const resetPasswordController = async (req, res) => {
     const hash = await bcrypt.hash(newPassword, 10);
     await User.findOneAndUpdate({ email }, { password: hash });
 
-    return res.send({ message: "successfully reset the password" });
+    return res.send({ message: "Successfully reset the password" });
   } catch (error) {
-    console.log(error);
+    return res.send({
+      error: "Internal server error",
+      errorField: "resetPassword",
+    });
   }
 };
 
