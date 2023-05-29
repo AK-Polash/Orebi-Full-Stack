@@ -1,6 +1,8 @@
 const nodemailer = require("nodemailer");
 
-const emailSend = async (res, otp, email, fieldName) => {
+const emailSend = async (mailTo, ...rest) => {
+  const [subject, template] = rest;
+
   try {
     let transporter = nodemailer.createTransport({
       service: "gmail",
@@ -10,21 +12,12 @@ const emailSend = async (res, otp, email, fieldName) => {
       },
     });
 
-    let info = await transporter.sendMail({
+    await transporter.sendMail({
       from: "polashk199@gmail.com",
-      to: email,
-      subject: "Forgot Password?",
-      html: `<p>Your password reset OTP code is <b>${otp}</b>. Insert the code to the match OTP page and finally reset the password.</p>`,
+      to: mailTo,
+      subject: subject,
+      html: template,
     });
-
-    if (!info.accepted.length > 0) {
-      return res.send({
-        error: "occured an error while sending the email",
-        errorField: fieldName,
-      });
-    }
-
-    return res.send({ message: "successfully sent the email" });
   } catch (error) {
     console.log(error);
   }

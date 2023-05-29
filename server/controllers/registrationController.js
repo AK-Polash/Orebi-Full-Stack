@@ -4,6 +4,9 @@ const nameValidation = require("../utils/nameValidation");
 const emailValidation = require("../utils/emailValidation");
 const telephoneValidation = require("../utils/telephoneValidation");
 const passwordValidation = require("../utils/passwordValidation");
+const tokenCreator = require("../utils/tokenCreator");
+const emailSend = require("../utils/emailSend");
+const verificationTemplate = require("../emailTemplate/verificationTemplate");
 
 const registrationController = (req, res) => {
   const {
@@ -69,9 +72,20 @@ const registrationController = (req, res) => {
           password: hash,
         });
 
-        return user
-          .save()
-          .then(() => res.send({ message: "registration successful" }));
+        const token = tokenCreator({ email: user.email }, "secret", "1d");
+        console.log(token);
+
+        emailSend(
+          user.email,
+          "Account Verification",
+          verificationTemplate(token)
+        );
+
+        await user.save().then(() =>
+          res.send({
+            message: "registration successful verification email sent",
+          })
+        );
       } else {
         return res.send({ error: "user already exist", errorField: "email" });
       }

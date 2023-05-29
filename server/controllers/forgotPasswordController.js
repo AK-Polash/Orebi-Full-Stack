@@ -2,6 +2,7 @@ const User = require("../models/registrationModel");
 const emailValidation = require("../utils/emailValidation");
 const emailSend = require("../utils/emailSend");
 const aleaRNGFactory = require("number-generator/lib/aleaRNGFactory");
+const otpTemplate = require("../emailTemplate/otpTemplate");
 
 const forgotPasswordController = async (req, res) => {
   try {
@@ -21,10 +22,13 @@ const forgotPasswordController = async (req, res) => {
 
     await User.findOneAndUpdate(
       { email: forgotPassword },
-      { $set: { forgotPasswordOTP: randomOtp } }
+      { $set: { forgotPasswordOTP: randomOtp } },
+      { new: true }
     );
 
-    return emailSend(res, randomOtp, forgotPassword, "forgotPassword");
+    emailSend(forgotPassword, "Forgot Password?", otpTemplate(randomOtp));
+
+    return res.send({ message: "an OTP code sent to your email address" });
   } catch (error) {
     return res.send({
       error: "internal server error",

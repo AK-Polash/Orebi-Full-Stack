@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import MatchOtp from "./pages/MatchOtp";
 import ResetPassword from "./pages/ResetPassword";
+import UserVerification from "./pages/UserVerification";
 
 let router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ let router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/matchOtp" element={<MatchOtp />} />
       <Route path="/resetPassword" element={<ResetPassword />} />
+      <Route path="/verify" element={<UserVerification />} />
       <Route path="*" element={<NotFound />} />
     </Route>
   )
