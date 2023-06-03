@@ -83,6 +83,8 @@ const registrationController = (req, res) => {
         await user.save().then(() =>
           res.send({
             message: "Registration successful verification email sent",
+            fullName: user.firstName + " " + user.lastName,
+            email: user.email,
           })
         );
       } else {

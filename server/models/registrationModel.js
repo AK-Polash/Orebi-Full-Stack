@@ -46,6 +46,19 @@ const registrationSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  merchant: {
+    type: Boolean,
+    default: false,
+  },
+  role: {
+    type: String,
+    default: "member",
+    enum: ["member", "merchant"],
+  },
+  created: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 module.exports = mongoose.model("User", registrationSchema);
