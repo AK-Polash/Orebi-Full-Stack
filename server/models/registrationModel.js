@@ -53,7 +53,7 @@ const registrationSchema = new Schema({
   role: {
     type: String,
     default: "member",
-    enum: ["member", "merchant"],
+    enum: ["member", "merchant", "admin"],
   },
   created: {
     type: Date,
