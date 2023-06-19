@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const Store = require("../models/merchantModel");
 const User = require("../models/registrationModel");
+const Store = require("../models/merchantModel");
 const nameValidation = require("../utils/nameValidation");
 const emailValidation = require("../utils/emailValidation");
 const telephoneValidation = require("../utils/telephoneValidation");
@@ -142,8 +142,62 @@ const allMerchantController = async (req, res) => {
   return res.send(allMerchant);
 };
 
+const merchantProductsController = async (req, res) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.send({ error: "Unauthorized entry", errorField: "storeId" });
+  }
+
+  const as = authorization.split("@")[0];
+  const storeId = authorization.split("@")[1];
+  const merchantSecret = authorization.split("@")[2];
+
+  if (as !== "merchant") {
+    return res.send({ error: "Unknown error occured", errorField: "storeId" });
+  } else if (noSpaceValidation(res, storeId, "storeId")) {
+    return;
+  } else if (!mongoose.Types.ObjectId.isValid(storeId)) {
+    return res.send({
+      error: "Invalid merchant reference",
+      errorField: "storeId",
+    });
+  } else if (noSpaceValidation(res, merchantSecret, "merchantSecret")) {
+    return;
+  } else if (merchantSecret !== process.env.MERCHANT_SECRET) {
+    return res.send({
+      error: "Untracked entry",
+      errorField: "storeId",
+    });
+  }
+
+  try {
+    const merchantProducts = await Store.find({ _id: storeId })
+      .select("-__v -voterIdNumber")
+      .populate({
+        path: "products",
+        model: "Product",
+        select: "-__v -store",
+        populate: {
+          path: "variants",
+          model: "Variant",
+          select: "-__v -product",
+        },
+      });
+
+    if (!merchantProducts.length > 0) {
+      return res.send({ error: "Can't find products of this merchant" });
+    }
+
+    return res.send(merchantProducts);
+  } catch (error) {
+    console.log(error);
+    return res.send({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   becomeMerchantController,
   merchantStatusController,
   allMerchantController,
+  merchantProductsController,
 };

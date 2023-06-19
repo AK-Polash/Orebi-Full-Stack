@@ -1,5 +1,11 @@
 const mongoose = require("mongoose");
 const User = require("../models/registrationModel");
+const Store = require("../models/merchantModel");
+const Product = require("../models/productModel");
+const Variant = require("../models/variantModel");
+const Option = require("../models/optionModel");
+const nameValidation = require("../utils/nameValidation");
+const { emptySpaceValidation } = require("../utils/spaceValidation");
 
 const secureUpload = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -34,9 +40,112 @@ const secureUpload = async (req, res, next) => {
   }
 };
 
-const createProductController = (req, res) => {
-  const { productName } = req.body;
-  console.log(productName);
+const createProductController = async (req, res) => {
+  const { name, description, image, store } = req.body;
+
+  if (nameValidation(res, name, "productName")) {
+    return;
+  } else if (emptySpaceValidation(res, description, "description")) {
+    return;
+  } else if (emptySpaceValidation(res, image, "productImage")) {
+    return;
+  } else if (!mongoose.Types.ObjectId.isValid(store)) {
+    return res.send({ error: "Store reference error", errorField: "storeId" });
+  }
+
+  try {
+    const existingProduct = await Product.find({ name });
+    if (existingProduct.length > 0) {
+      return res.send({
+        error: "Product already exist in this name",
+        errorField: "productName",
+      });
+    }
+
+    const product = new Product({
+      name,
+      description,
+      image,
+      store,
+    });
+
+    await product.save();
+    await Store.findOneAndUpdate(
+      { _id: product.store },
+      { $push: { products: product._id } },
+      { new: true }
+    );
+
+    return res.send({ message: "Product created successfully", product });
+  } catch (error) {
+    console.log(error);
+    return res.send({ error: "Internal server error" });
+  }
 };
 
-module.exports = { secureUpload, createProductController };
+const createVariantController = async (req, res) => {
+  const { name, image, product } = req.body;
+
+  if (nameValidation(res, name, "variantName")) {
+    return;
+  } else if (emptySpaceValidation(res, image, "variantImage")) {
+    return;
+  } else if (!mongoose.Types.ObjectId.isValid(product)) {
+    return res.send({
+      error: "Invalid product reference",
+      errorField: "productId",
+    });
+  }
+
+  try {
+    const existingVariant = await Variant.find({ name });
+    if (existingVariant.length > 0) {
+      return res.send({
+        error: "Variant already exist",
+        errorField: "variantName",
+      });
+    }
+
+    const variant = new Variant({
+      name,
+      image,
+      product,
+    });
+
+    await variant.save();
+    await Product.findOneAndUpdate(
+      { _id: variant.product },
+      { $push: { variants: variant._id } },
+      { new: true }
+    );
+
+    return res.send({ message: "Variant created successfully", variant });
+  } catch (error) {
+    console.log(error);
+    return res.send({ error: "Internal server error" });
+  }
+};
+
+const allProductsController = async (req, res) => {
+  try {
+    const allProducts = await Product.find({})
+      .select({ __v: 0 })
+      .populate("variants", "-product -__v");
+
+    if (!allProducts.length > 0) {
+      return res.send({ error: "Can't find the products" });
+    }
+
+    return res.send(allProducts);
+  } catch (error) {
+    console.log(error);
+    return res.send({ error: "Internal server error" });
+  }
+};
+
+module.exports = {
+  secureUpload,
+  createProductController,
+  createVariantController,
+  allProductsController,
+};
