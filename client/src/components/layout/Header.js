@@ -119,13 +119,13 @@ const Header = () => {
                       className="cursor-pointer border-x-[1px] border-t border-b border-smoke text-center font-dm text-sm font-normal text-primary transition-all duration-150 ease-linear hover:border-transparent hover:bg-caret hover:font-bold hover:text-pure"
                       item="My Account"
                       href="#"
-                      linkStyle="py-[14px] px-[58px] block"
+                      linkStyle="py-[14px] block"
                     />
                     <ListItem
                       className="cursor-pointer border-x-[1px] border-b border-smoke text-center font-dm text-sm font-normal text-primary transition-all duration-150 ease-linear hover:border-transparent hover:bg-caret hover:font-bold hover:text-pure"
                       item="Log Out"
                       href="#"
-                      linkStyle="py-[14px] px-[58px] block"
+                      linkStyle="py-[14px] block"
                     />
                   </List>
                 )}

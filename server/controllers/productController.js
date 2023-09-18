@@ -3,9 +3,10 @@ const User = require("../models/registrationModel");
 const Store = require("../models/merchantModel");
 const Product = require("../models/productModel");
 const Variant = require("../models/variantModel");
-const Option = require("../models/optionModel");
-const nameValidation = require("../utils/nameValidation");
-const { emptySpaceValidation } = require("../utils/spaceValidation");
+const {
+  emptySpaceValidation,
+  noSpaceValidation,
+} = require("../utils/spaceValidation");
 
 const secureUpload = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -41,13 +42,11 @@ const secureUpload = async (req, res, next) => {
 };
 
 const createProductController = async (req, res) => {
-  const { name, description, image, store } = req.body;
+  const { name, description, store } = req.body;
 
-  if (nameValidation(res, name, "productName")) {
+  if (emptySpaceValidation(res, name, "productName")) {
     return;
   } else if (emptySpaceValidation(res, description, "description")) {
-    return;
-  } else if (emptySpaceValidation(res, image, "productImage")) {
     return;
   } else if (!mongoose.Types.ObjectId.isValid(store)) {
     return res.send({ error: "Store reference error", errorField: "storeId" });
@@ -65,7 +64,6 @@ const createProductController = async (req, res) => {
     const product = new Product({
       name,
       description,
-      image,
       store,
     });
 
@@ -84,12 +82,17 @@ const createProductController = async (req, res) => {
 };
 
 const createVariantController = async (req, res) => {
-  const { name, image, product } = req.body;
+  const { price, quantity, color, ram, storage, size, product } = req.body;
 
-  if (nameValidation(res, name, "variantName")) {
+  if (noSpaceValidation(res, price, "price")) {
     return;
-  } else if (emptySpaceValidation(res, image, "variantImage")) {
+  } else if (noSpaceValidation(res, quantity, "quantity")) {
     return;
+  } else if (!req.file) {
+    return res.send({
+      error: "variant image required",
+      errorField: "variantImage",
+    });
   } else if (!mongoose.Types.ObjectId.isValid(product)) {
     return res.send({
       error: "Invalid product reference",
@@ -98,17 +101,14 @@ const createVariantController = async (req, res) => {
   }
 
   try {
-    const existingVariant = await Variant.find({ name });
-    if (existingVariant.length > 0) {
-      return res.send({
-        error: "Variant already exist",
-        errorField: "variantName",
-      });
-    }
-
     const variant = new Variant({
-      name,
-      image,
+      price,
+      quantity,
+      color,
+      ram,
+      storage,
+      size,
+      image: `${process.env.IMAGE_PATH}/uploads/${req.file.filename}`,
       product,
     });
 
