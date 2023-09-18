@@ -206,7 +206,12 @@ const createDiscountController = async (req, res) => {
 
 const allDiscountController = async (req, res) => {
   try {
-    //
+    const allDiscount = await Discount.find({}).select("-__v");
+    if (!allDiscount.length > 0) {
+      return res.send({ error: "No discount added yet" });
+    }
+
+    return res.send({ message: "Request successfull", allDiscount });
   } catch (error) {
     console.log(error);
     return res.send({ error: "Internal server error" });
