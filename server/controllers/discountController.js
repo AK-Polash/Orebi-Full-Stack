@@ -219,8 +219,24 @@ const allDiscountController = async (req, res) => {
 };
 
 const removeDiscountController = async (req, res) => {
+  const { discountId } = req.body;
+
+  if (!discountId) {
+    return res.send({ error: "Discount id is required" });
+  } else if (!mongoose.Types.ObjectId.isValid(discountId)) {
+    return res.send({ error: "Invalid discount id" });
+  }
+
   try {
-    //
+    const data = await Discount.findOneAndDelete(
+      { _id: discountId },
+      { new: true }
+    );
+
+    if (data === null) {
+      return res.send({ error: "Could not find the selected item" });
+    }
+    return res.send({ message: "Discount removed successfully" });
   } catch (error) {
     console.log(error);
     return res.send({ error: "Internal server error" });
